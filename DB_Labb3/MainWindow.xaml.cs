@@ -20,5 +20,10 @@ namespace DB_Labb3
         {
             InitializeComponent();
         }
+
+        private void AddCategoryTB_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

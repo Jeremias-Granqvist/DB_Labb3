@@ -11,7 +11,7 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
+            <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
@@ -23,15 +23,53 @@
             <Border Grid.Column="0"
                     Grid.Row="0"
                     BorderThickness="1"
-                    BorderBrush="Gray"></Border>
-            <Border Grid.Column="1"
-                    Grid.Row="0"
-                    BorderThickness="1"
-                    BorderBrush="Gray"></Border>
+                    BorderBrush="Gray" />
+            <Label Content="Add Category:"
+                   Height="25"
+                   Width="100"
+                   Margin="33,46,534,252" />
+            <TextBox x:Name="AddCategoryTB"
+                     Height="25"
+                     Width="200"
+                     Margin="195,46,272,252" />
+
+            <Label Content="Pick Category:"
+                   Height="25"
+                   Width="100"
+                   Margin="33,114,534,184" />
+            <ComboBox Height="25"
+                      Width="100"
+                      Margin="195,114,372,184">
+                
+            </ComboBox>
+
+            <RadioButton x:Name="ToDoRB"
+                         GroupName="ToDoNote" 
+                         Content="ToDo"
+                         Height="25"
+                         Width="50"
+                         Margin="431,115,186,183" />
+
+            <RadioButton x:Name="NoteRB"
+                         GroupName="ToDoNote" 
+                         Content="Note"
+                         Height="25"
+                         Width="50"
+                         Margin="527,114,90,184" />
+            
+            <Label Content="Write your ToDo/Note:"
+                   Height="25"
+                   Width="140"
+                   Margin="33,200,494,98" />
+
+            <TextBox x:Name="ToDoNoteTB"
+                       Height="50"
+                       Width="200"
+                     Margin="195,212,272,61" />
         </Grid>
         <Border Grid.Column="0"
                 Grid.Row="1"
                 BorderThickness="1"
-                BorderBrush="Gray"></Border>
+                BorderBrush="Gray" />
     </Grid>
 </Window>
