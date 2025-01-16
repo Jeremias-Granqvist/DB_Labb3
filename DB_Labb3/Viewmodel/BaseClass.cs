@@ -6,10 +6,11 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DB_Labb3.Model
+namespace DB_Labb3.Viewmodel
 {
     public class BaseClass : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler? PropertyChanged;
         public void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
         {

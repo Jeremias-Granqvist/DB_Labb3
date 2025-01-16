@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using DB_Labb3.Model;
+using DB_Labb3.Viewmodel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,14 +18,12 @@ namespace DB_Labb3
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void AddCategoryTB_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
+            var viewModel = new MainWindowViewModel(App.ToDoRepository);
+            DataContext = viewModel;
         }
     }
 }
