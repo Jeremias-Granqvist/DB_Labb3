@@ -1,4 +1,5 @@
-﻿using DB_Labb3.Viewmodel;
+﻿using DB_Labb3.Repositories;
+using DB_Labb3.Viewmodel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -12,11 +13,12 @@ namespace DB_Labb3.Model
     public class ToDoManager : BaseClass
     {
         public ObservableCollection<ToDo> ToDoItems { get; private set; }
+        private readonly IToDoRepository _toDoRepository;
 
-        public ToDoManager()
+        public ToDoManager(IToDoRepository toDoRepository)
         {
             ToDoItems = new ObservableCollection<ToDo>();
-
+            _toDoRepository = toDoRepository;
             ToDoItems.CollectionChanged += (sender, args) =>
             {
                 foreach (var item in ToDoItems)
@@ -31,7 +33,9 @@ namespace DB_Labb3.Model
             var toDo = sender as ToDo;
             if (toDo != null && args.PropertyName == nameof(ToDo.IsCompleted) && toDo.IsCompleted)
             {
+                
                 ToDoItems.Remove(toDo);
+                _toDoRepository.RemoveToDoByIdAsync(toDo.Id);
             }
         }
     }

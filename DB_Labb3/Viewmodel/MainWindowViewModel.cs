@@ -38,9 +38,9 @@ namespace DB_Labb3.Viewmodel
 
         public MainWindowViewModel(IToDoRepository toDoRepository)
         {
-            ToDoManager = new ToDoManager();
 
             _toDoRepository = toDoRepository;
+            ToDoManager = new ToDoManager(toDoRepository);
             _notes = new ObservableCollection<Note>();
             _categories = new ObservableCollection<Category>();
             LoadDataAsync();

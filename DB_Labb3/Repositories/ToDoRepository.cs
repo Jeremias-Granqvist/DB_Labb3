@@ -1,4 +1,5 @@
 ﻿using DB_Labb3.Model;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -91,10 +92,17 @@ namespace DB_Labb3.Repositories
             await _toDoItems.InsertOneAsync(toDo);
             return toDo;
         }
-        public async Task<ToDo> GetToDoByIdAsync(string id)
+        public async Task<ToDo> GetToDoByIdAsync(ObjectId id)
         {
-            var filter = Builders<ToDo>.Filter.Eq(item => item.Id, new MongoDB.Bson.ObjectId(id));
+            var filter = Builders<ToDo>.Filter.Eq(item => item.Id, new MongoDB.Bson.ObjectId(id.ToString()));
             return await _toDoItems.Find(filter).FirstOrDefaultAsync();
+        }
+
+        public async Task<ToDo> RemoveToDoByIdAsync(ObjectId id)
+        {
+            var filter = Builders<ToDo>.Filter.Eq(item => item.Id, id);
+            var deletedItem = await _toDoItems.FindOneAndDeleteAsync(filter);
+            return deletedItem;
         }
 
         //Category collection
@@ -114,6 +122,12 @@ namespace DB_Labb3.Repositories
             var filter = Builders<Category>.Filter.Eq(c => c.Id, new MongoDB.Bson.ObjectId(id));
             return await _categories.Find(filter).FirstOrDefaultAsync();
         }
+        public async Task<Category> RemoveCategoryByIdAsync(ObjectId id)
+        {
+            var filter = Builders<Category>.Filter.Eq(item => item.Id, id);
+            var deletedCategory = await _categories.FindOneAndDeleteAsync(filter);
+            return deletedCategory;
+        }
 
         //note collection
         public async Task<List<Note>> GetAllNotesAsync()
@@ -124,6 +138,12 @@ namespace DB_Labb3.Repositories
         {
             await _notes.InsertOneAsync(note);
             return note;
+        }
+        public async Task<Note> RemoveNoteByIdAsync(ObjectId id)
+        {
+            var filter = Builders<Note>.Filter.Eq(item => item.Id, id);
+            var deletedNote = await _notes.FindOneAndDeleteAsync(filter);
+            return deletedNote;
         }
     }
 }
