@@ -122,7 +122,7 @@
                          HorizontalAlignment="Left"
                          VerticalAlignment="Center"
                          Margin="10,10,10,10"
-                         Text="{Binding NewCategory}" />
+                         Text="{Binding NewCategory, UpdateSourceTrigger=PropertyChanged}" />
 
                 <ComboBox x:Name="CategoryCB"
                           Grid.Column="1"
@@ -131,7 +131,10 @@
                           Width="150"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
-                          Margin="10,10,10,10">
+                          Margin="10,10,10,10"
+                          ItemsSource="{Binding Categories}"
+                          DisplayMemberPath="Name"
+                          SelectedItem="{Binding SelectedCategory}">
 
 
                 </ComboBox>
@@ -146,7 +149,8 @@
                          Width="150"
                          HorizontalAlignment="Left"
                          VerticalAlignment="Center"
-                         Margin="10,10,10,10" />
+                         Margin="10,10,10,10"
+                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
 
 
             </Grid>
@@ -185,7 +189,7 @@
                                  HorizontalAlignment="Right"
                                  VerticalAlignment="Center"
                                  Margin="10,10,10,10"
-                                 IsChecked="True" />
+                                 IsChecked="{Binding ToDoIsChecked}" />
 
                     <RadioButton x:Name="NoteRB"
                                  GroupName="ToDoNote"
@@ -196,7 +200,8 @@
                                  Width="50"
                                  HorizontalAlignment="Left"
                                  VerticalAlignment="Center"
-                                 Margin="10,10,10,10" />
+                                 Margin="10,10,10,10"
+                                 IsChecked="{Binding NoteIsChecked}"/>
 
                 </Grid>
 
@@ -213,22 +218,57 @@
             <ListBox x:Name="NotesLB"
                      Grid.Column="3"
                      Grid.Row="0"
-                     Margin="10,10,10,10">
+                     Margin="10,10,10,10"
+                     ItemsSource="{Binding Notes}"
+                     DisplayMemberPath="Content">
 
             </ListBox>
         </Grid>
 
         <Grid Grid.Row="1">
-            <ListBox x:Name="ToDoLB"
-                     Margin="10,10,10,10"
-                     ItemsSource="{Binding ToDoItems}"
-                     Grid.IsSharedSizeScope="True"
-                     HorizontalContentAlignment="Stretch"
-                     Grid.Row="1"
-                     ItemContainerStyle="{StaticResource ToDoStyle}"
-                     Grid.Column="0"
-                     Grid.ColumnSpan="4">
-            </ListBox>
+            <ListView ItemsSource="{Binding ToDoManager.ToDoItems}">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="True"
+                              ColumnHeaderToolTip="ToDoTasks">
+                        <GridViewColumn Header="Completed?"
+                                        Width="90">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="30,1"
+                                              VerticalAlignment="Center"
+                                              HorizontalAlignment="Center"
+                                              IsChecked="{Binding IsCompleted}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=ToDoCategory.Name}"
+                                        Header="Category"
+                                        Width="Auto"
+                                        />
+                        <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"
+                                        Header="Description"
+                                        Width="Auto" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <!--<CheckBox Grid.Column="0"
+                      IsChecked="{Binding Path=IsCompleted}" />
+            <TextBlock Grid.Column="1"
+                       Text="{Binding Path=ToDoCategory}" />
+            <TextBlock Grid.Column="2"
+                       Text="{Binding Path=Title}" />-->
+
+            <!--<ListBox x:Name="ToDoLB"
+                         Margin="10,10,10,10"
+                         ItemsSource="{Binding ToDoItems}"
+                         Grid.IsSharedSizeScope="True"
+                         HorizontalContentAlignment="Stretch"
+                         Grid.Row="1"
+                         ItemContainerStyle="{StaticResource ToDoStyle}"
+                         Grid.Column="0"
+                         Grid.ColumnSpan="4">
+                </ListBox>-->
         </Grid>
     </Grid>
 </Window>

@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using DB_Labb3.Repositories;
 using System.Collections.ObjectModel;
+using System.Windows;
+using System.ComponentModel;
 
 namespace DB_Labb3.Viewmodel
 {
@@ -15,13 +17,8 @@ namespace DB_Labb3.Viewmodel
     {
 
         private readonly IToDoRepository _toDoRepository;
-        
-        private ObservableCollection<ToDo> _toDoItems;
-        public ObservableCollection<ToDo> ToDoItems
-        {
-            get { return _toDoItems; }
-            set { _toDoItems = value; }
-        }
+        public ToDoManager ToDoManager { get; private set; }
+
 
         private ObservableCollection<Note> _notes;
         public ObservableCollection<Note> Notes
@@ -41,14 +38,21 @@ namespace DB_Labb3.Viewmodel
 
         public MainWindowViewModel(IToDoRepository toDoRepository)
         {
+            ToDoManager = new ToDoManager();
+
             _toDoRepository = toDoRepository;
-            _toDoItems = new ObservableCollection<ToDo>();
             _notes = new ObservableCollection<Note>();
             _categories = new ObservableCollection<Category>();
             LoadDataAsync();
 
+
             SaveCategoryCommand = new DelegateCommand(SaveCategoryPress);
             SaveToDoNoteCommand = new DelegateCommand(SaveToDoNotePress);
+        }
+
+        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         //delegatecommands
@@ -65,10 +69,10 @@ namespace DB_Labb3.Viewmodel
         public async Task LoadToDoAsync()
         {
             var items = await _toDoRepository.GetAllToDosAsync();
-            ToDoItems.Clear();
+            ToDoManager.ToDoItems.Clear();
             foreach (var item in items)
             {
-                ToDoItems.Add(item);
+                ToDoManager.ToDoItems.Add(item);
             }
         }
         public async Task LoadCategoriesAsync()
@@ -94,7 +98,7 @@ namespace DB_Labb3.Viewmodel
         public async Task AddToDoAsync(ToDo newToDo)
         {
             var addedToDo = await _toDoRepository.AddToDoAsync(newToDo);
-            ToDoItems.Add(addedToDo);
+            ToDoManager.ToDoItems.Add(addedToDo);
         }
         public async Task AddCategoryAsync(Category newCategory)
         {
@@ -110,20 +114,44 @@ namespace DB_Labb3.Viewmodel
         //save buttons
         private void SaveToDoNotePress(object obj)
         {
-            
+            if (ToDoIsChecked == false && NoteIsChecked == false)
+            {
+                string message = "Please choose if this is a Note or a ToDo";
+                string caption = "Error";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBoxImage icon = MessageBoxImage.Error;
+                MessageBoxResult result;
+                result = MessageBox.Show(message, caption, button, icon, MessageBoxResult.OK);
+            }
+            if (ToDoIsChecked == true && NoteIsChecked == false)
+            {
+                var newToDo = new ToDo { Title = Description, IsCompleted = false, ToDoCategory = SelectedCategory };
+                _toDoRepository.AddToDoAsync(newToDo);
+                LoadToDoAsync();
+            }
+            if (NoteIsChecked == true && ToDoIsChecked == false)
+            {
+                var newNote = new Note { Content = Description, NoteCategory = SelectedCategory };
+                _toDoRepository.AddNoteAsync(newNote);
+                LoadNotesAsync();
+            }
+
             // lägga in if-sats mellan radioknappar för att se om det är note eller todo
             //skapa item av det.
             // kör antingen addnoteasync eller addtodoasync
         }
         private void SaveCategoryPress(object obj)
         {
-            //skapa kategori, och kör addcategoryasync
+            var newCategory = new Category { Name = NewCategory };
+            _toDoRepository.AddCategoryAsync(newCategory);
+            LoadCategoriesAsync();
+            NewCategory = string.Empty;
         }
 
 
-        private Category _newCategory;
-
-        public Category NewCategory
+        // properties
+        private string _newCategory;
+        public string NewCategory
         {
             get { return _newCategory; }
             set 
@@ -133,9 +161,57 @@ namespace DB_Labb3.Viewmodel
             }
         }
 
+        private bool _ToDoIsChecked;
+        public bool ToDoIsChecked
+        {
+            get { return _ToDoIsChecked; }
+            set { _ToDoIsChecked = value;
+                RaisePropertyChanged();
+            }
+        }
 
+        private bool _noteIsChecked;
+        public bool NoteIsChecked
+        {
+            get { return _noteIsChecked; }
+            set { 
+                _noteIsChecked = value;
+                RaisePropertyChanged();
+            }
+        }
 
+        private string _description;
+        public string Description
+        {
+            get { return _description; }
+            set { 
+                _description = value;
+                RaisePropertyChanged();
+                }
+        }
 
+        private Category _selectedCategory;
+
+        public Category SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set {
+                _selectedCategory = value;
+                RaisePropertyChanged();
+                    }
+        }
+
+        private bool _completedToDo;
+
+        public bool CompletedToDo
+        {
+            get { return _completedToDo; }
+            set 
+            { 
+                _completedToDo = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
     }

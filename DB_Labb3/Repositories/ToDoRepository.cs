@@ -54,8 +54,8 @@ namespace DB_Labb3.Repositories
             if (_categories.CountDocuments(Builders<Category>.Filter.Empty) == 0)
             {
                 var defaultCategories = new List<Category> {
-                new Category { Name = "Shopping" },
-                new Category { Name = " " }
+                new Category { Name = " " },
+                new Category { Name = "Shopping" }
                 };
 
                 _categories.InsertMany(defaultCategories);

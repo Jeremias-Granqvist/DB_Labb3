@@ -13,7 +13,21 @@ namespace DB_Labb3.Model
     {
         public ObjectId Id { get; set; }
         public string Title { get; set; }
-        public bool IsCompleted { get; set; }
+
+        private bool _isCompleted;
+        public bool IsCompleted
+        {
+            get { return _isCompleted; }
+            set 
+            {
+                if (_isCompleted != value)
+                {
+                _isCompleted = value;
+                RaisePropertyChanged();
+                }
+            }
+        }
+
         public DateTime DueDate { get; set; }
         public Category? ToDoCategory { get; set; }
     }
