@@ -219,14 +219,28 @@
                      Grid.Column="3"
                      Grid.Row="0"
                      Margin="10,10,10,10"
-                     ItemsSource="{Binding Notes}"
-                     DisplayMemberPath="Content">
-
+                     ItemsSource="{Binding Notes, UpdateSourceTrigger=PropertyChanged}"
+                     DisplayMemberPath="Content"
+                     SelectedItem="{Binding SelectedNote, UpdateSourceTrigger=PropertyChanged}">
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit Note" />
+                        <MenuItem Header="Delete Note"
+                                  Command="{Binding RemoveNoteCommand}"/>
+                    </ContextMenu>    
+                </ListBox.ContextMenu>
             </ListBox>
         </Grid>
 
         <Grid Grid.Row="1">
             <ListView ItemsSource="{Binding ToDoManager.ToDoItems}">
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit Note" />
+                        <MenuItem Header="Delete Note"
+                                  Command="{Binding RemoveToDoCommand}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
                 <ListView.View>
                     <GridView AllowsColumnReorder="True"
                               ColumnHeaderToolTip="ToDoTasks">
@@ -248,6 +262,7 @@
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"
                                         Header="Description"
                                         Width="Auto" />
+                        
                     </GridView>
                 </ListView.View>
             </ListView>

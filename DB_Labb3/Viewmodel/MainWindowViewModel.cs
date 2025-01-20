@@ -1,15 +1,9 @@
-﻿using DB_Labb3.Model;
-using DB_Labb3.Command;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using DB_Labb3.Command;
+using DB_Labb3.Model;
 using DB_Labb3.Repositories;
 using System.Collections.ObjectModel;
 using System.Windows;
-using System.ComponentModel;
+using System.Windows.Input;
 
 namespace DB_Labb3.Viewmodel
 {
@@ -48,16 +42,15 @@ namespace DB_Labb3.Viewmodel
 
             SaveCategoryCommand = new DelegateCommand(SaveCategoryPress);
             SaveToDoNoteCommand = new DelegateCommand(SaveToDoNotePress);
-        }
-
-        private void Item_PropertyChanged(object? sender, PropertyChangedEventArgs e)
-        {
-            throw new NotImplementedException();
+            RemoveNoteCommand = new DelegateCommand(DeleteNotePress);
+            RemoveToDoCommand = new DelegateCommand(DeleteToDoPress);
         }
 
         //delegatecommands
         public ICommand SaveCategoryCommand { get; }
         public ICommand SaveToDoNoteCommand { get; }
+        public ICommand RemoveNoteCommand { get; }
+        public ICommand RemoveToDoCommand { get; }
 
         //load data
         public async Task LoadDataAsync()
@@ -111,7 +104,7 @@ namespace DB_Labb3.Viewmodel
             Notes.Add(addedNote);
         }
 
-        //save buttons
+        //button presses
         private void SaveToDoNotePress(object obj)
         {
             if (ToDoIsChecked == false && NoteIsChecked == false)
@@ -148,14 +141,56 @@ namespace DB_Labb3.Viewmodel
             NewCategory = string.Empty;
         }
 
+        private void DeleteNotePress(object obj)
+        {
+            if (SelectedNote != null)
+            {
+                _toDoRepository.RemoveNoteByIdAsync(SelectedNote.Id);
+                LoadNotesAsync();
+            }
+        }
+
+        private void DeleteToDoPress(object obj)
+        {
+            if (SelectedToDo != null)
+            {
+                _toDoRepository.RemoveToDoByIdAsync(SelectedToDo.Id);
+            }
+        }
 
         // properties
+
+        private Note _selectedNote;
+
+        public Note SelectedNote
+        {
+            get { return _selectedNote; }
+            set
+            {
+                _selectedNote = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ToDo _selectedToDo;
+
+        public ToDo SelectedToDo
+        {
+            get { return _selectedToDo; }
+            set
+            {
+                _selectedToDo = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
         private string _newCategory;
         public string NewCategory
         {
             get { return _newCategory; }
-            set 
-            { 
+            set
+            {
                 _newCategory = value;
                 RaisePropertyChanged();
             }
@@ -165,7 +200,9 @@ namespace DB_Labb3.Viewmodel
         public bool ToDoIsChecked
         {
             get { return _ToDoIsChecked; }
-            set { _ToDoIsChecked = value;
+            set
+            {
+                _ToDoIsChecked = value;
                 RaisePropertyChanged();
             }
         }
@@ -174,7 +211,8 @@ namespace DB_Labb3.Viewmodel
         public bool NoteIsChecked
         {
             get { return _noteIsChecked; }
-            set { 
+            set
+            {
                 _noteIsChecked = value;
                 RaisePropertyChanged();
             }
@@ -184,10 +222,11 @@ namespace DB_Labb3.Viewmodel
         public string Description
         {
             get { return _description; }
-            set { 
+            set
+            {
                 _description = value;
                 RaisePropertyChanged();
-                }
+            }
         }
 
         private Category _selectedCategory;
@@ -195,10 +234,11 @@ namespace DB_Labb3.Viewmodel
         public Category SelectedCategory
         {
             get { return _selectedCategory; }
-            set {
+            set
+            {
                 _selectedCategory = value;
                 RaisePropertyChanged();
-                    }
+            }
         }
 
         private bool _completedToDo;
@@ -206,8 +246,8 @@ namespace DB_Labb3.Viewmodel
         public bool CompletedToDo
         {
             get { return _completedToDo; }
-            set 
-            { 
+            set
+            {
                 _completedToDo = value;
                 RaisePropertyChanged();
             }
