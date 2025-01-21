@@ -199,19 +199,6 @@ namespace DB_Labb3.Viewmodel
         }
 
         // properties
-
-
-        private Category _selectedNoteCategory;
-
-        public Category SelectedNoteCategory
-        {
-            get { return _selectedNoteCategory; }
-            set { _selectedNoteCategory = value;
-                RaisePropertyChanged();
-            }
-        }
-
-
         private Note _selectedNote;
         public Note SelectedNote
         {
@@ -219,7 +206,6 @@ namespace DB_Labb3.Viewmodel
             set
             {
                 _selectedNote = value;
-                SelectedNoteCategory = _selectedNote.NoteCategory;
                 RaisePropertyChanged();
             }
         }

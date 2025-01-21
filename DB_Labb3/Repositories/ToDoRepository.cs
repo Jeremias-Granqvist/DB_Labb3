@@ -93,9 +93,9 @@ namespace DB_Labb3.Repositories
             await _toDoItems.InsertOneAsync(toDo);
             return toDo;
         }
-        public async Task<ToDo> GetToDoByIdAsync(ObjectId id)
+        public async Task<ToDo> GetToDoByIdAsync(ToDo toDo)
         {
-            var filter = Builders<ToDo>.Filter.Eq(item => item.Id, new MongoDB.Bson.ObjectId(id.ToString()));
+            var filter = Builders<ToDo>.Filter.Eq(item => item.Id, toDo.Id);
             return await _toDoItems.Find(filter).FirstOrDefaultAsync();
         }
 
@@ -118,9 +118,9 @@ namespace DB_Labb3.Repositories
             return category;
         }
 
-        public async Task<Category> GetCategoryByIdAsync(string id)
+        public async Task<Category> GetCategoryByIdAsync(Category category)
         {
-            var filter = Builders<Category>.Filter.Eq(c => c.Id, new MongoDB.Bson.ObjectId(id));
+            var filter = Builders<Category>.Filter.Eq(c => c.Id, category.Id);
             return await _categories.Find(filter).FirstOrDefaultAsync();
         }
         public async Task<Category> RemoveCategoryByIdAsync(ObjectId id)

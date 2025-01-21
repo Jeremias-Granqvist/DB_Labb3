@@ -11,14 +11,14 @@ namespace DB_Labb3.Repositories
     public interface IToDoRepository
     {
         Task<List<ToDo>> GetAllToDosAsync();
-        Task<ToDo> AddToDoAsync(ToDo item);
-        Task<ToDo> GetToDoByIdAsync(ObjectId id);
+        Task<ToDo> AddToDoAsync(ToDo toDo);
+        Task<ToDo> GetToDoByIdAsync(ToDo toDo);
         Task<ToDo> RemoveToDoByIdAsync(ObjectId id);
 
 
         Task<List<Category>> GetAllCategoriesAsync();
         Task<Category> AddCategoryAsync(Category category);
-        Task<Category> GetCategoryByIdAsync(string id);
+        Task<Category> GetCategoryByIdAsync(Category category);
         Task<Category> RemoveCategoryByIdAsync(ObjectId id);
 
 
