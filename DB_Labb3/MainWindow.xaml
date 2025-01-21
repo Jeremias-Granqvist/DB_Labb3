@@ -78,6 +78,7 @@
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    
                 </Grid.RowDefinitions>
                 <Label Content="Add Category:"
                        Grid.Column="0"
@@ -224,7 +225,8 @@
                      SelectedItem="{Binding SelectedNote, UpdateSourceTrigger=PropertyChanged}">
                 <ListBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit Note" />
+                        <MenuItem Header="Edit Note"
+                                  Command="{Binding EditNoteCommand}"/>
                         <MenuItem Header="Delete Note"
                                   Command="{Binding RemoveNoteCommand}"/>
                     </ContextMenu>    
@@ -236,7 +238,8 @@
             <ListView ItemsSource="{Binding ToDoManager.ToDoItems}">
                 <ListView.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Edit Note" />
+                        <MenuItem Header="Edit Note"
+                                  Command="{Binding EditToDoCommand}"/>
                         <MenuItem Header="Delete Note"
                                   Command="{Binding RemoveToDoCommand}" />
                     </ContextMenu>

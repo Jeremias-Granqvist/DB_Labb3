@@ -25,5 +25,6 @@ namespace DB_Labb3.Repositories
         Task<List<Note>> GetAllNotesAsync();
         Task<Note> AddNoteAsync(Note note);
         Task<Note> RemoveNoteByIdAsync(ObjectId id);
+        Task<Note> GetNoteByIdAsync(Note note);
     }
 }

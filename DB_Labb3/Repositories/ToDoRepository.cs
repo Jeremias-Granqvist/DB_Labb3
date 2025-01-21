@@ -50,6 +50,7 @@ namespace DB_Labb3.Repositories
 
         }
 
+        //populate collections on first startup
         private void PopulateDefaultData()
         {
             if (_categories.CountDocuments(Builders<Category>.Filter.Empty) == 0)
@@ -144,6 +145,17 @@ namespace DB_Labb3.Repositories
             var filter = Builders<Note>.Filter.Eq(item => item.Id, id);
             var deletedNote = await _notes.FindOneAndDeleteAsync(filter);
             return deletedNote;
+        }
+
+        public async Task<Note>GetNoteByIdAsync(Note note)
+        {
+            var filter = Builders<Note>.Filter.Eq(n => n.Id, note.Id);
+            var updateNote = Builders<Note>.Update
+                .Set(n => n.Content, note.Content)
+                .Set(n => n.NoteCategory, note.NoteCategory);
+
+            var editNote = await _notes.FindOneAndUpdateAsync<Note>(filter, updateNote);
+            return editNote;
         }
     }
 }

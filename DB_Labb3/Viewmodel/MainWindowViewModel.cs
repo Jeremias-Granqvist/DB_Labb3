@@ -1,4 +1,6 @@
 ﻿using DB_Labb3.Command;
+using DB_Labb3.DialogWindows;
+using DB_Labb3.Interfaces;
 using DB_Labb3.Model;
 using DB_Labb3.Repositories;
 using System.Collections.ObjectModel;
@@ -7,7 +9,7 @@ using System.Windows.Input;
 
 namespace DB_Labb3.Viewmodel
 {
-    public class MainWindowViewModel : BaseClass
+    public class MainWindowViewModel : BaseClass, ICloseWindows
     {
 
         private readonly IToDoRepository _toDoRepository;
@@ -42,15 +44,24 @@ namespace DB_Labb3.Viewmodel
 
             SaveCategoryCommand = new DelegateCommand(SaveCategoryPress);
             SaveToDoNoteCommand = new DelegateCommand(SaveToDoNotePress);
+            EditNoteCommand = new DelegateCommand(EditNotePress);
+            SaveNoteChangesCommand = new DelegateCommand(SaveNoteChanges);
+            EditToDoCommand = new DelegateCommand(EditToDoPress);
             RemoveNoteCommand = new DelegateCommand(DeleteNotePress);
             RemoveToDoCommand = new DelegateCommand(DeleteToDoPress);
+            CancelChangesCommand = new DelegateCommand(CancelChangesPress);
         }
 
         //delegatecommands
         public ICommand SaveCategoryCommand { get; }
         public ICommand SaveToDoNoteCommand { get; }
+        public ICommand EditNoteCommand { get; }
+        public ICommand EditToDoCommand { get; }
         public ICommand RemoveNoteCommand { get; }
         public ICommand RemoveToDoCommand { get; }
+        public ICommand SaveNoteChangesCommand { get; }
+        public ICommand CancelChangesCommand { get; }
+
 
         //load data
         public async Task LoadDataAsync()
@@ -124,14 +135,10 @@ namespace DB_Labb3.Viewmodel
             }
             if (NoteIsChecked == true && ToDoIsChecked == false)
             {
-                var newNote = new Note { Content = Description, NoteCategory = SelectedCategory };
+                var newNote = new Note() { Content = Description, NoteCategory = SelectedCategory };
                 _toDoRepository.AddNoteAsync(newNote);
                 LoadNotesAsync();
             }
-
-            // lägga in if-sats mellan radioknappar för att se om det är note eller todo
-            //skapa item av det.
-            // kör antingen addnoteasync eller addtodoasync
         }
         private void SaveCategoryPress(object obj)
         {
@@ -139,6 +146,30 @@ namespace DB_Labb3.Viewmodel
             _toDoRepository.AddCategoryAsync(newCategory);
             LoadCategoriesAsync();
             NewCategory = string.Empty;
+        }
+
+        public void EditNotePress(object obj)
+        {
+            var editNoteWindow = new EditNoteDialogWindow(this);
+            if (editNoteWindow.DataContext is ICloseWindows vm)
+            {
+                vm.Close = new Action(editNoteWindow.Close);
+            }
+            editNoteWindow.Show();
+        }
+
+        public void SaveNoteChanges(object obj)
+        {
+            _toDoRepository.GetNoteByIdAsync(SelectedNote);
+            LoadNotesAsync();
+            Close?.Invoke();
+        }
+
+
+
+        public void EditToDoPress(object obj)
+        {
+
         }
 
         private void DeleteNotePress(object obj)
@@ -155,25 +186,45 @@ namespace DB_Labb3.Viewmodel
             if (SelectedToDo != null)
             {
                 _toDoRepository.RemoveToDoByIdAsync(SelectedToDo.Id);
+                LoadToDoAsync();
             }
+        }
+
+
+
+
+        private void CancelChangesPress(object obj)
+        {
+            Close?.Invoke();
         }
 
         // properties
 
-        private Note _selectedNote;
 
+        private Category _selectedNoteCategory;
+
+        public Category SelectedNoteCategory
+        {
+            get { return _selectedNoteCategory; }
+            set { _selectedNoteCategory = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+        private Note _selectedNote;
         public Note SelectedNote
         {
             get { return _selectedNote; }
             set
             {
                 _selectedNote = value;
+                SelectedNoteCategory = _selectedNote.NoteCategory;
                 RaisePropertyChanged();
             }
         }
 
         private ToDo _selectedToDo;
-
         public ToDo SelectedToDo
         {
             get { return _selectedToDo; }
@@ -184,6 +235,16 @@ namespace DB_Labb3.Viewmodel
             }
         }
 
+        private Category _selectedCategory;
+        public Category SelectedCategory
+        {
+            get { return _selectedCategory; }
+            set
+            {
+                _selectedCategory = value;
+                RaisePropertyChanged();
+            }
+        }
 
         private string _newCategory;
         public string NewCategory
@@ -229,20 +290,8 @@ namespace DB_Labb3.Viewmodel
             }
         }
 
-        private Category _selectedCategory;
-
-        public Category SelectedCategory
-        {
-            get { return _selectedCategory; }
-            set
-            {
-                _selectedCategory = value;
-                RaisePropertyChanged();
-            }
-        }
 
         private bool _completedToDo;
-
         public bool CompletedToDo
         {
             get { return _completedToDo; }
@@ -253,6 +302,24 @@ namespace DB_Labb3.Viewmodel
             }
         }
 
+        //edit note properties
 
+        private string _editNoteContent;
+
+        public string EditNoteContent
+        {
+            get { return _editNoteContent; }
+            set
+            {
+                _editNoteContent = value;
+                RaisePropertyChanged();
+            }
+        }
+
+
+
+
+
+        public Action Close { get; set; }
     }
 }
