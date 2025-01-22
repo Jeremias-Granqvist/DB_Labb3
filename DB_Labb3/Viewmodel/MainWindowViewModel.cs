@@ -206,9 +206,20 @@ namespace DB_Labb3.Viewmodel
             set
             {
                 _selectedNote = value;
+                SelectedNoteCategory = _selectedNote.NoteCategory;
                 RaisePropertyChanged();
+                RaisePropertyChanged("SelectedNoteCategory");
             }
         }
+
+        private Category _selectedNoteCategory;
+
+        public Category SelectedNoteCategory
+        {
+            get { return _selectedNoteCategory; }
+            set { _selectedNoteCategory = value; }
+        }
+
 
         private ToDo _selectedToDo;
         public ToDo SelectedToDo

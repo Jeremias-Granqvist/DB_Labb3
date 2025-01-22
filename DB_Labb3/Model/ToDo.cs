@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,14 @@ namespace DB_Labb3.Model
             }
         }
 
+
+        public ToDo(string Title, bool isCompleted)
+        {
+            if (this.ToDoCategory == null)
+            {
+
+            }
+        }
         public DateTime DueDate { get; set; }
         public Category? ToDoCategory { get; set; }
     }

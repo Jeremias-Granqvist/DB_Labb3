@@ -4,6 +4,7 @@ using DB_Labb3.Repositories;
 using DB_Labb3.Viewmodel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
