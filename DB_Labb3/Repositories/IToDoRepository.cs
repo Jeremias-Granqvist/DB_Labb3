@@ -12,7 +12,7 @@ namespace DB_Labb3.Repositories
     {
         Task<List<ToDo>> GetAllToDosAsync();
         Task<ToDo> AddToDoAsync(ToDo toDo);
-        Task<ToDo> GetToDoByIdAsync(ToDo toDo);
+        Task<ToDo> UpdateToDoByIdAsync(ToDo toDo);
         Task<ToDo> RemoveToDoByIdAsync(ObjectId id);
 
 
@@ -24,7 +24,7 @@ namespace DB_Labb3.Repositories
 
         Task<List<Note>> GetAllNotesAsync();
         Task<Note> AddNoteAsync(Note note);
+        Task<Note> UpdateNoteByIdAsync(Note note);
         Task<Note> RemoveNoteByIdAsync(ObjectId id);
-        Task<Note> GetNoteByIdAsync(Note note);
     }
 }

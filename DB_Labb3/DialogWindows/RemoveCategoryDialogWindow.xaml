@@ -1,0 +1,69 @@
+﻿<Window x:Class="DB_Labb3.DialogWindows.RemoveCategoryDialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DB_Labb3.DialogWindows"
+        mc:Ignorable="d"
+        Title="RemoveCategoryDialogWindow" Height="250" Width="400">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Label Content="Remove category: "
+               Grid.Row="0"
+               Grid.Column="0"
+               Grid.ColumnSpan="2"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Margin="20,20,20,20" 
+               FontSize="22"/>
+        <Label Content="Pick Category:"
+               Grid.Row="1"
+               Grid.Column="0"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Margin="20,20,20,20" />
+
+        <ComboBox x:Name="RemoveCategoryCB"
+                  Grid.Column="1"
+                  Grid.Row="1"
+                  Height="25"
+                  Width="150"
+                  HorizontalAlignment="Center"
+                  VerticalAlignment="Center"
+                  Margin="20,20,20,20"
+                  ItemsSource="{Binding Categories}"
+                  DisplayMemberPath="Name"
+                  SelectedItem="{Binding SelectedCategory}">
+        </ComboBox>
+
+        <Button x:Name="RemoveCategoryBTN"
+                Content="Remove Category"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="110"
+                Height="33"
+                Grid.Row="2"
+                Grid.Column="0"
+                Margin="20,20,20,20"
+                Command="{Binding RemoveCategoryCommand}" />
+
+        <Button x:Name="CancelEditNoteBTN"
+                Content="Cancel changes"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Width="110"
+                Height="33"
+                Grid.Column="1"
+                Grid.Row="2"
+                Margin="20,20,20,20"
+                Command="{Binding CancelChangesCommand}" />
+    </Grid>
+</Window>

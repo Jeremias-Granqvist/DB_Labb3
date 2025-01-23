@@ -29,15 +29,7 @@ namespace DB_Labb3.Model
             }
         }
 
-
-        public ToDo(string Title, bool isCompleted)
-        {
-            if (this.ToDoCategory == null)
-            {
-
-            }
-        }
-        public DateTime DueDate { get; set; }
+        //public DateTime DueDate { get; set; } to be implemented later
         public Category? ToDoCategory { get; set; }
     }
 }

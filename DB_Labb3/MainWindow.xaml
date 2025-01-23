@@ -7,7 +7,9 @@
         xmlns:Model="clr-namespace:DB_Labb3.Model"
         xmlns:Converter="clr-namespace:DB_Labb3.Converters"
         mc:Ignorable="d"
-        Title="MainWindow" Height="500" Width="800">
+        Title="MainWindow"
+        Height="500"
+        Width="800">
     <Window.Resources>
         <Converter:ObjectToTypeConverter x:Key="ObjectToTypeConverter" />
         <ControlTemplate x:Key="titleRowToDo">
@@ -16,8 +18,8 @@
                         BorderBrush="Black"
                         BorderThickness="1">
                     <TextBlock HorizontalAlignment="Center"
-                               VerticalAlignment="Center" 
-                               Text="Test1"/>
+                               VerticalAlignment="Center"
+                               Text="Test1" />
                 </Border>
             </Grid>
         </ControlTemplate>
@@ -56,17 +58,37 @@
             </Style.Triggers>
         </Style>
     </Window.Resources>
-    
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
             <RowDefinition Height="2*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <Line x:Name="verticalLine"
+              X1="565"
+              X2="565"
+              Y1="325"
+              Stroke="Gray"
+              Grid.Row="1"/>
+        <Line x:Name="HorizontalLine"
+              Y1="105"
+              Y2="105"
+              X1="565" 
+              Stroke="Gray"
+              Grid.Row="1"/>
 
-        <Grid Grid.Row="0">
+        <Menu>
+            <MenuItem Header="Categories" >
+                <MenuItem Header="Remove Category"
+                          Command="{Binding EditCategoryCommand}"/>
+            </MenuItem>
+            <MenuItem Header="Help" />
+        </Menu>
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -75,10 +97,10 @@
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    
+                    <RowDefinition Height="107.564" />
+                    <RowDefinition />
+                    <RowDefinition />
+
                 </Grid.RowDefinitions>
                 <Label Content="Add Category:"
                        Grid.Column="0"
@@ -87,6 +109,7 @@
                        Width="Auto"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Center"
+                       HorizontalContentAlignment="Center"
                        Margin="10,10,10,10" />
 
                 <Label Content="Pick Category:"
@@ -94,8 +117,9 @@
                        Grid.Row="1"
                        Height="25"
                        Width="100"
+                       HorizontalContentAlignment="Center"
                        HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
+                       VerticalAlignment="Bottom"
                        Margin="10,10,10,10" />
 
                 <Label Content="Write your ToDo/Note:"
@@ -103,6 +127,7 @@
                        Grid.Row="2"
                        Height="25"
                        Width="140"
+                       HorizontalContentAlignment="Center"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Margin="10,10,10,10" />
@@ -125,13 +150,20 @@
                          Margin="10,10,10,10"
                          Text="{Binding NewCategory, UpdateSourceTrigger=PropertyChanged}" />
 
+                <Label Content="Add new item"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       Margin="10,10"
+                       FontSize="20"/>
                 <ComboBox x:Name="CategoryCB"
                           Grid.Column="1"
                           Grid.Row="1"
                           Height="25"
                           Width="150"
                           HorizontalAlignment="Left"
-                          VerticalAlignment="Center"
+                          VerticalAlignment="Bottom"
                           Margin="10,10,10,10"
                           ItemsSource="{Binding Categories}"
                           DisplayMemberPath="Name"
@@ -151,7 +183,7 @@
                          HorizontalAlignment="Left"
                          VerticalAlignment="Center"
                          Margin="10,10,10,10"
-                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" />
 
 
             </Grid>
@@ -188,7 +220,7 @@
                                  Height="25"
                                  Width="50"
                                  HorizontalAlignment="Right"
-                                 VerticalAlignment="Center"
+                                 VerticalAlignment="Bottom"
                                  Margin="10,10,10,10"
                                  IsChecked="{Binding ToDoIsChecked}" />
 
@@ -200,9 +232,9 @@
                                  Height="25"
                                  Width="50"
                                  HorizontalAlignment="Left"
-                                 VerticalAlignment="Center"
+                                 VerticalAlignment="Bottom"
                                  Margin="10,10,10,10"
-                                 IsChecked="{Binding NoteIsChecked}"/>
+                                 IsChecked="{Binding NoteIsChecked}" />
 
                 </Grid>
 
@@ -219,27 +251,52 @@
             <ListBox x:Name="NotesLB"
                      Grid.Column="3"
                      Grid.Row="0"
-                     Margin="10,10,10,10"
+                     Margin="10,10,10,50"
                      ItemsSource="{Binding Notes, UpdateSourceTrigger=PropertyChanged}"
                      DisplayMemberPath="Content"
                      SelectedItem="{Binding SelectedNote, UpdateSourceTrigger=PropertyChanged}">
                 <ListBox.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Edit Note"
-                                  Command="{Binding EditNoteCommand}"/>
+                                  Command="{Binding EditNoteCommand}" />
                         <MenuItem Header="Delete Note"
-                                  Command="{Binding RemoveNoteCommand}"/>
-                    </ContextMenu>    
+                                  Command="{Binding RemoveNoteCommand}" />
+                    </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
+            <Button x:Name="RemoveNoteBTN"
+                    Grid.Column="3"
+                    Grid.Row="0"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Center"
+                    Content="Remove Note"
+                    Margin="10,10,10,10"
+                    Height="25"
+                    Width="100"
+                    Command="{Binding RemoveNoteCommand}">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=NotesLB, Path=SelectedIndex}"
+                                         Value="-1">
+                                <Setter Property="IsEnabled"
+                                        Value="False" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+
+            </Button>
+
         </Grid>
 
-        <Grid Grid.Row="1">
-            <ListView ItemsSource="{Binding ToDoManager.ToDoItems}">
+        <Grid Grid.Row="2">
+            <ListView ItemsSource="{Binding ToDoManager.ToDoItems}"
+                      SelectedItem="{Binding SelectedToDo}">
                 <ListView.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Edit Note"
-                                  Command="{Binding EditToDoCommand}"/>
+                                  Command="{Binding EditToDoCommand}" />
                         <MenuItem Header="Delete Note"
                                   Command="{Binding RemoveToDoCommand}" />
                     </ContextMenu>
@@ -260,33 +317,14 @@
                         </GridViewColumn>
                         <GridViewColumn DisplayMemberBinding="{Binding Path=ToDoCategory.Name}"
                                         Header="Category"
-                                        Width="Auto"
-                                        />
+                                        Width="100" />
                         <GridViewColumn DisplayMemberBinding="{Binding Path=Title}"
                                         Header="Description"
                                         Width="Auto" />
-                        
+
                     </GridView>
                 </ListView.View>
             </ListView>
-
-            <!--<CheckBox Grid.Column="0"
-                      IsChecked="{Binding Path=IsCompleted}" />
-            <TextBlock Grid.Column="1"
-                       Text="{Binding Path=ToDoCategory}" />
-            <TextBlock Grid.Column="2"
-                       Text="{Binding Path=Title}" />-->
-
-            <!--<ListBox x:Name="ToDoLB"
-                         Margin="10,10,10,10"
-                         ItemsSource="{Binding ToDoItems}"
-                         Grid.IsSharedSizeScope="True"
-                         HorizontalContentAlignment="Stretch"
-                         Grid.Row="1"
-                         ItemContainerStyle="{StaticResource ToDoStyle}"
-                         Grid.Column="0"
-                         Grid.ColumnSpan="4">
-                </ListBox>-->
         </Grid>
     </Grid>
 </Window>

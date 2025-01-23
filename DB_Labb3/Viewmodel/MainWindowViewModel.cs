@@ -44,12 +44,16 @@ namespace DB_Labb3.Viewmodel
 
             SaveCategoryCommand = new DelegateCommand(SaveCategoryPress);
             SaveToDoNoteCommand = new DelegateCommand(SaveToDoNotePress);
-            EditNoteCommand = new DelegateCommand(EditNotePress);
             SaveNoteChangesCommand = new DelegateCommand(SaveNoteChanges);
+            SaveToDoChangesCommand = new DelegateCommand(SaveToDoChanges);
+            EditNoteCommand = new DelegateCommand(EditNotePress);
             EditToDoCommand = new DelegateCommand(EditToDoPress);
+            EditCategoryCommand = new DelegateCommand(EditCategoryPress);
             RemoveNoteCommand = new DelegateCommand(DeleteNotePress);
             RemoveToDoCommand = new DelegateCommand(DeleteToDoPress);
+            RemoveCategoryCommand = new DelegateCommand(DeleteCategoryPress);
             CancelChangesCommand = new DelegateCommand(CancelChangesPress);
+            
         }
 
         //delegatecommands
@@ -57,9 +61,12 @@ namespace DB_Labb3.Viewmodel
         public ICommand SaveToDoNoteCommand { get; }
         public ICommand EditNoteCommand { get; }
         public ICommand EditToDoCommand { get; }
+        public ICommand EditCategoryCommand { get; }
         public ICommand RemoveNoteCommand { get; }
         public ICommand RemoveToDoCommand { get; }
+        public ICommand RemoveCategoryCommand { get; }
         public ICommand SaveNoteChangesCommand { get; }
+        public ICommand SaveToDoChangesCommand { get; }
         public ICommand CancelChangesCommand { get; }
 
 
@@ -127,6 +134,16 @@ namespace DB_Labb3.Viewmodel
                 MessageBoxResult result;
                 result = MessageBox.Show(message, caption, button, icon, MessageBoxResult.OK);
             }
+            if (Description == string.Empty || Description == null)
+            {
+                string message = "Please write a ToDo or Note before saving.";
+                string caption = "Error";
+                MessageBoxButton button = MessageBoxButton.OK;
+                MessageBoxImage icon = MessageBoxImage.Error;
+                MessageBoxResult result;
+                result = MessageBox.Show(message, caption, button, icon, MessageBoxResult.OK);
+            }
+
             if (ToDoIsChecked == true && NoteIsChecked == false)
             {
                 var newToDo = new ToDo { Title = Description, IsCompleted = false, ToDoCategory = SelectedCategory };
@@ -139,6 +156,7 @@ namespace DB_Labb3.Viewmodel
                 _toDoRepository.AddNoteAsync(newNote);
                 LoadNotesAsync();
             }
+            Description = string.Empty;
         }
         private void SaveCategoryPress(object obj)
         {
@@ -158,18 +176,38 @@ namespace DB_Labb3.Viewmodel
             editNoteWindow.Show();
         }
 
+        public void EditCategoryPress(object obj)
+        {
+            var removeCategoryWindow = new RemoveCategoryDialogWindow(this);
+            if (removeCategoryWindow.DataContext is ICloseWindows vm)
+            {
+                vm.Close = new Action(removeCategoryWindow.Close);
+            }
+            removeCategoryWindow.Show();
+        }
+
         public void SaveNoteChanges(object obj)
         {
-            _toDoRepository.GetNoteByIdAsync(SelectedNote);
+            _toDoRepository.UpdateNoteByIdAsync(SelectedNote);
             LoadNotesAsync();
             Close?.Invoke();
         }
 
-
+        public void SaveToDoChanges(object obj)
+        {
+            _toDoRepository.UpdateToDoByIdAsync(SelectedToDo);
+            LoadToDoAsync();
+            Close?.Invoke();
+        }
 
         public void EditToDoPress(object obj)
         {
-
+            var editToDoWindow = new EditToDoDialogWindow(this);
+            if (editToDoWindow.DataContext is ICloseWindows vm)
+            {
+                vm.Close = new Action(editToDoWindow.Close);
+            }
+            editToDoWindow.Show();
         }
 
         private void DeleteNotePress(object obj)
@@ -190,8 +228,16 @@ namespace DB_Labb3.Viewmodel
             }
         }
 
+        private void DeleteCategoryPress(object obj)
+        {
+            if (SelectedCategory != null)
+            {
+                _toDoRepository.RemoveCategoryByIdAsync(SelectedCategory.Id);
+                LoadCategoriesAsync();
+            }
+            this.Close();
 
-
+        }
 
         private void CancelChangesPress(object obj)
         {
@@ -206,9 +252,7 @@ namespace DB_Labb3.Viewmodel
             set
             {
                 _selectedNote = value;
-                SelectedNoteCategory = _selectedNote.NoteCategory;
                 RaisePropertyChanged();
-                RaisePropertyChanged("SelectedNoteCategory");
             }
         }
 
@@ -217,7 +261,9 @@ namespace DB_Labb3.Viewmodel
         public Category SelectedNoteCategory
         {
             get { return _selectedNoteCategory; }
-            set { _selectedNoteCategory = value; }
+            set { _selectedNoteCategory = value;
+                RaisePropertyChanged();
+            }
         }
 
 

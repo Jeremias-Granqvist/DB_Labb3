@@ -53,9 +53,10 @@ namespace DB_Labb3.Repositories
         //populate collections on first startup
         private void PopulateDefaultData()
         {
+            var defaultCategories = new List<Category>();
             if (_categories.CountDocuments(Builders<Category>.Filter.Empty) == 0)
             {
-                var defaultCategories = new List<Category> {
+                defaultCategories = new List<Category> {
                 new Category { Name = " " },
                 new Category { Name = "Shopping" }
                 };
@@ -66,8 +67,8 @@ namespace DB_Labb3.Repositories
             {
                 var defaultToDos = new List<ToDo>
                 {
-                    new ToDo {Title = "Buy Milk, Eggs, Bacon", IsCompleted = false},
-                    new ToDo {Title = "Pick up dry cleaning", IsCompleted = false}
+                    new ToDo {Title = "Buy Milk, Eggs, Bacon", IsCompleted = false, ToDoCategory = defaultCategories.FirstOrDefault()},
+                    new ToDo {Title = "Pick up dry cleaning", IsCompleted = false, ToDoCategory = defaultCategories.FirstOrDefault()}
                 };
                 _toDoItems.InsertMany(defaultToDos);
             }
@@ -75,8 +76,8 @@ namespace DB_Labb3.Repositories
             {
                 var defaultNotes = new List<Note>
                 {
-                    new Note { Content = "Livingroom measurements 6x4m"},
-                    new Note {Content = "wall colour kitchen is #FFFF00"}
+                    new Note { Content = "Livingroom measurements 6x4m", NoteCategory = defaultCategories.FirstOrDefault() },
+                    new Note {Content = "wall colour kitchen is #FFFF00", NoteCategory = defaultCategories.FirstOrDefault()}
                 };
                 _notes.InsertMany(defaultNotes);
             }
@@ -93,17 +94,22 @@ namespace DB_Labb3.Repositories
             await _toDoItems.InsertOneAsync(toDo);
             return toDo;
         }
-        public async Task<ToDo> GetToDoByIdAsync(ToDo toDo)
+        public async Task<ToDo> UpdateToDoByIdAsync(ToDo toDo)
         {
             var filter = Builders<ToDo>.Filter.Eq(item => item.Id, toDo.Id);
-            return await _toDoItems.Find(filter).FirstOrDefaultAsync();
+            var updateToDo = Builders<ToDo>.Update
+                .Set(t => t.Title, toDo.Title)
+                .Set(t => t.ToDoCategory, toDo.ToDoCategory);
+
+            var editToDo = await _toDoItems.FindOneAndUpdateAsync<ToDo>(filter, updateToDo);
+            return editToDo;
         }
 
         public async Task<ToDo> RemoveToDoByIdAsync(ObjectId id)
         {
             var filter = Builders<ToDo>.Filter.Eq(item => item.Id, id);
-            var deletedItem = await _toDoItems.FindOneAndDeleteAsync(filter);
-            return deletedItem;
+            var deletedToDo = await _toDoItems.FindOneAndDeleteAsync(filter);
+            return deletedToDo;
         }
 
         //Category collection
@@ -147,7 +153,7 @@ namespace DB_Labb3.Repositories
             return deletedNote;
         }
 
-        public async Task<Note>GetNoteByIdAsync(Note note)
+        public async Task<Note>UpdateNoteByIdAsync(Note note)
         {
             var filter = Builders<Note>.Filter.Eq(n => n.Id, note.Id);
             var updateNote = Builders<Note>.Update

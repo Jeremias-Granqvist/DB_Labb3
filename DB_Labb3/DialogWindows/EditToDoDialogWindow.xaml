@@ -48,9 +48,15 @@
                   HorizontalAlignment="Left"
                   VerticalAlignment="Center"
                   Margin="10,10,10,10"
-                  ItemsSource="{Binding Categories}"
-                  DisplayMemberPath="Name"
-                  SelectedItem="{Binding SelectedToDo.ToDoCategory}" />
+                  SelectedValue="{Binding SelectedToDo.ToDoCategory.Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedValuePath="Name"
+                  ItemsSource="{Binding Categories}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
 
         <Button x:Name="SaveEditNoteBTN"
                 Content="Save changes"
@@ -61,7 +67,7 @@
                 Grid.Row="2"
                 Margin="55,10,10,10"
                 Grid.ColumnSpan="2"
-                Command="{Binding}" />
+                Command="{Binding SaveToDoChangesCommand}" />
 
         <Button x:Name="CancelEditNoteBTN"
                 Content="Cancel changes"
