@@ -53,7 +53,7 @@ namespace DB_Labb3.Viewmodel
             RemoveToDoCommand = new DelegateCommand(DeleteToDoPress);
             RemoveCategoryCommand = new DelegateCommand(DeleteCategoryPress);
             CancelChangesCommand = new DelegateCommand(CancelChangesPress);
-            
+            HelpWindowCommand = new DelegateCommand(HelpButtonPress);
         }
 
         //delegatecommands
@@ -68,7 +68,7 @@ namespace DB_Labb3.Viewmodel
         public ICommand SaveNoteChangesCommand { get; }
         public ICommand SaveToDoChangesCommand { get; }
         public ICommand CancelChangesCommand { get; }
-
+        public ICommand HelpWindowCommand { get; }
 
         //load data
         public async Task LoadDataAsync()
@@ -244,6 +244,15 @@ namespace DB_Labb3.Viewmodel
             Close?.Invoke();
         }
 
+        private void HelpButtonPress(object obj)
+        {
+            string message = "To edit or remove a ToDo or Note, right-click the selected item and click either \"Edit\" or \"Delete\" from the menu. \r\n\r\nPlease note that there will not be a warning message, the selected item will be removed immediately without warning and no possible way of retreival.";
+            string caption = "Information";
+            MessageBoxButton button = MessageBoxButton.OK;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult result;
+            result = MessageBox.Show(message, caption, button, icon, MessageBoxResult.OK);
+        }
         // properties
         private Note _selectedNote;
         public Note SelectedNote

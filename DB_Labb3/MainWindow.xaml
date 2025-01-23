@@ -82,11 +82,18 @@
               Grid.Row="1"/>
 
         <Menu>
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <DockPanel HorizontalAlignment="Stretch" />
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
             <MenuItem Header="Categories" >
                 <MenuItem Header="Remove Category"
                           Command="{Binding EditCategoryCommand}"/>
             </MenuItem>
-            <MenuItem Header="Help" />
+            <MenuItem Header="Help"
+                      Command="{Binding HelpWindowCommand}"
+                      HorizontalAlignment="Right"/>
         </Menu>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
