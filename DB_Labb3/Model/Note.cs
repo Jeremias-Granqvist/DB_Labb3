@@ -14,7 +14,7 @@ namespace DB_Labb3.Model
 
         public ObjectId Id { get; set; }
         public string Content { get; set; }
-        public Category NoteCategory { get; set; }
+        public Category? NoteCategory { get; set; }
 
     }
 }
